@@ -4,14 +4,31 @@ import matplotlib.pyplot as plt
 import math
 
 # check if proposed line intersects with polygon
-def checkIntersection(v1, v2):
+def checkIntersection(vList, lList, v1, v2):
+    # get linear componetns of the line (v1, v2)
+    # check 
     pass    
 
+# return the distance between 2 vertices rounded to 6 decimals
 def getDistance(v1, v2):
-    return round(math.sqrt((int(v2[0])-int(v1[0]))**2 + (int(v2[1])-int(v1[1]))**2), 6)
+    return round(math.sqrt((float(v2[0])-float(v1[0]))**2 + (float(v2[1])-float(v1[1]))**2), 6)
+
+# return slope and y-intercept for given 2 vertices
+# if given vertices create a vertical line, return 'infinite' as slope and x-intercept as b
+def getLinear(v1, v2):
+    if float(v2[0]) - float(v1[0]) == 0: # check for vertical line
+        m = 'infinite'
+        b = float(v1[0]) # treat this as x-intercept
+    else:
+        m = (float(v2[1]) - float(v1[1])) / (float(v2[0]) - float(v1[0])) # y2-y1/x2-x1
+        b = float(v1[1]) - float(m)*float(v1[0])                    # y - mx
+    return m, b
+
+def maxLine2(vList, lList):
+    pass
 
 # works for convex polygons
-def maxLine(vCount, vList):
+def maxLine(vList):
     mx = [0, 0] # x1, x2 for max line
     my = [0, 0] # y1, y2 for max line
     max = 0 # distance of max line
@@ -37,23 +54,34 @@ def exportPlot(vList, mx, my):
     # plt.axis('off')
     plt.fill(*zip(*vList), fill=False, color='green', lw='2')
     plt.plot(mx, my, color='r', lw='2') # plot([x1, x2], [y1, y2])
-    plt.savefig('output.jpg')
+    plt.savefig('output.png')
 
 
-# read the input file, get number of vertices and list of vertices
+# read the input file, return list of vertices and list of lines
 def getInput(inFile):
-    vCount = 0
     vList = []
+    lList = []
     with open(inFile) as f:
-        vCount = f.readline().strip()
+        f.readline().strip()
         for v in f:
             vList.append(v.strip().split(' '))
-    return vCount, vList
+
+    for i, v1 in enumerate (vList):
+        if (i==len(vList)-1):
+            v2 = vList[0]
+        else:
+            v2 = vList[i+1]
+        lList.append(getLinear(v1, v2))
+
+    return vList, lList
 
 
 ##################### MAIN #####################
 inFile = 'input.txt' # name of file with input data
-vCount, vList = getInput(inFile) # get list of vertices
+vList, lList = getInput(inFile) # get list of vertices
+print vList
+print lList
 
-mx, my = maxLine(vCount, vList)
-exportPlot(vList, mx, my)
+# mx, my = maxLine(vList)
+mx, my = maxLine2(vList, lineList)
+# exportPlot(vList, mx, my)
