@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import math
 
 # check if proposed line intersects with polygon
-def checkIntersection(vList, lList, v1, v2):
+def checkIntersection(vList, lcList, v1, v2):
     # get linear componetns of the line (v1, v2)
     # check 
     pass    
@@ -21,33 +21,43 @@ def getLinear(v1, v2):
         b = float(v1[0]) # treat this as x-intercept
     else:
         m = (float(v2[1]) - float(v1[1])) / (float(v2[0]) - float(v1[0])) # y2-y1/x2-x1
-        b = float(v1[1]) - float(m)*float(v1[0])                    # y - mx
+        b = float(v1[1]) - float(m)*float(v1[0])                          # y - mx
     return m, b
 
-def maxLine2(vList, lList):
+#---sudo algorithm---#
+# longest line will always touch atleast 2 vertices
+# create lines using the vList, and get their slope and y-int or the x-int for vertical lines
+# check these lines for intersection with other lines
+    # if they intersect at an end point, this is ok
+    # if they intersect anywhere else:
+        # check if there are any lines who's points are beyond the currently intersected line
+            # if there is another line, this line is not valid
+            # it not, then the line is valid
+
+def maxLine2(vList, lcList):
     pass
 
-# works for convex polygons
-def maxLine(vList):
-    mx = [0, 0] # x1, x2 for max line
-    my = [0, 0] # y1, y2 for max line
-    max = 0 # distance of max line
+# works for convex polygons - old method
+# def maxLine(vList):
+#     mx = [0, 0] # x1, x2 for max line
+#     my = [0, 0] # y1, y2 for max line
+#     max = 0 # distance of max line
 
-    for i, v1 in enumerate(vList):
-        for j, v2 in enumerate(vList):
-            if j == i: # dont check the same point
-                continue
-            tmax = getDistance(v1, v2)
-            if (tmax > max):
-                mx[0] = v1[0]
-                mx[1] = v2[0]
-                my[0] = v1[1]
-                my[1] = v2[1]
-                max = tmax
-    print "x1="+str(mx[0])  + ", " + "x2="+str(mx[1])
-    print "y1="+str(my[0]) + ", " + "y2="+str(my[1])
-    print "max landing strip = " + str(max)
-    return mx, my
+#     for i, v1 in enumerate(vList):
+#         for j, v2 in enumerate(vList):
+#             if j == i: # dont check the same point
+#                 continue
+#             tmax = getDistance(v1, v2)
+#             if (tmax > max):
+#                 mx[0] = v1[0]
+#                 mx[1] = v2[0]
+#                 my[0] = v1[1]
+#                 my[1] = v2[1]
+#                 max = tmax
+#     print "x1="+str(mx[0])  + ", " + "x2="+str(mx[1])
+#     print "y1="+str(my[0]) + ", " + "y2="+str(my[1])
+#     print "max landing strip = " + str(max)
+#     return mx, my
 
 # save output as a jpeg
 def exportPlot(vList, mx, my):
@@ -60,7 +70,7 @@ def exportPlot(vList, mx, my):
 # read the input file, return list of vertices and list of lines
 def getInput(inFile):
     vList = []
-    lList = []
+    lcList = []
     with open(inFile) as f:
         f.readline().strip()
         for v in f:
@@ -71,17 +81,17 @@ def getInput(inFile):
             v2 = vList[0]
         else:
             v2 = vList[i+1]
-        lList.append(getLinear(v1, v2))
+        lcList.append(getLinear(v1, v2))
 
-    return vList, lList
+    return vList, lcList
 
 
 ##################### MAIN #####################
 inFile = 'input.txt' # name of file with input data
-vList, lList = getInput(inFile) # get list of vertices
+vList, lcList = getInput(inFile) # get list of vertices
 print vList
-print lList
+print lcList
 
 # mx, my = maxLine(vList)
-mx, my = maxLine2(vList, lineList)
+mx, my = maxLine2(vList, list)
 # exportPlot(vList, mx, my)
