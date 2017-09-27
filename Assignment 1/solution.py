@@ -4,36 +4,8 @@ import matplotlib.pyplot as plt
 import math
 import time
 
-# check where line intersects with polygon and return new bounds
-def checkIntersection(vList, lcList, v1, v2):
-    m, b = getLinear(v1, v2)
-    intersectons = 0
-    for i, l in enumerate(lcList):
-        if intersectons > 2: # if the line intersects with more than 2 other lines
-            return [0, 0], [0, 0]
-
-        if m == l[0]: # exception for parallel lines
-            continue
-
-        if m == 'infinite': # if given line is vertical
-        	# m is 'infinite'
-        	# b is the x-intercept
-        	poi_y = l[0] * b + l[1]  # intersection y-val
-        	poi_x = b                # intersection x-val 
-
-        if l[0] == 'infinite': # if line in list is vertical
-        	# l[0] is 'infinite'
-        	# l[1] is x intercept
-        	print "correct case"
-        	poi_y = m * l[1] + b # intersection y-val
-        	poi_x = l[1]         # intersection x-val
-        	break
-
-        else: # for normal lines, POI and check if it is within v1 and v2, if not, replace
-            poi_y = (l[1] - b) / (m - l[0])
-            poi_x = (poi_y - b) / m
-
-    # replace v1 v2 for vertical line
+def replacePoint(v1, v2, poi_x, poi_y):
+	# replace v1 v2 for vertical line
     	# check if v1 or v2 is top or bottom
 
     # replace v1 v2 for normal line
@@ -41,10 +13,63 @@ def checkIntersection(vList, lcList, v1, v2):
     	if poi_x > v1[0]:
     		v1[0] = poi_x
     		v1[1] = poi_y
+    	else:
+    		return [0, 0], [0, 0]
     else:
     	if poi_x > v2[0]:
     		v2[0] = poi_x
     		v2[1] = poi_y
+    	else:
+    		return [0, 0], [0, 0]
+
+    return v1, v2
+
+# check where line intersects with polygon and return new bounds
+def checkIntersection(vList, lcList, v1, v2):
+    m, b = getLinear(v1, v2)
+    for i, l in enumerate(lcList):
+    	# get the other line's vertices
+    	lv1 = vList[i]
+    	if (i==len(vList)-1):
+            lv2 = vList[0]
+        else:
+            lv2 = vList[i+1]
+
+        if m == l[0]: # exception for parallel lines
+            continue
+
+        ################# Vertical Lines ####################
+        if m == 'infinite': # if given line is vertical
+        	# m is 'infinite'
+        	# b is the x-intercept
+        	poi_y = l[0] * b + l[1]  # intersection y-val
+        	poi_x = b                # intersection x-val
+
+        elif l[0] == 'infinite': # if line in list is vertical
+        	# l[0] is 'infinite'
+        	# l[1] is x intercept
+        	poi_y = m * l[1] + b # intersection y-val
+        	poi_x = l[1]         # intersection x-val
+
+        ################# Horizontal Lines ##################
+        elif m == 0:
+        	poi_x = (b - l[1]) / l[0]
+        	poi_y = l[0] * poi_x + l[1]
+
+        elif l[0] == 0:
+        	poi_x = (l[1] - b) / m
+        	poi_y = m * poi_x + b
+        	
+        ################# 2 Diagonal Lines ##################
+        else:
+            poi_y = (l[1] - b) / (m - l[0])
+            poi_x = (poi_y - b) / m
+
+        # check whether we have to replace a point or not    
+        if [poi_x, poi_y] == [float(lv1[0]), float(lv1[1])] or [poi_x, poi_y] == [float(lv2[0]), float(lv2[1])]: # intersection at endpoint
+        	continue
+        v1, v2 = replacePoint(v1, v2, poi_x, poi_y)
+        break
 
     return v1, v2
 
@@ -63,16 +88,6 @@ def getLinear(v1, v2):
         m = (float(v2[1]) - float(v1[1])) / (float(v2[0]) - float(v1[0])) # y2-y1/x2-x1
         b = float(v1[1]) - float(m)*float(v1[0])                          # y - mx
     return m, b
-
-#---sudo algorithm---#
-# longest line will always touch atleast 2 vertices
-# create lines using the vList, and get their slope and y-int or the x-int for vertical lines
-# check these lines for intersection with other lines
-    # if they intersect at an end point, this is ok
-    # if they intersect anywhere else:
-        # check if there are any lines who's points are beyond the currently intersected line
-            # if there is another line, this line is not valid
-            # it not, then the line is valid
 
 # return the maximum line
 def maxLine(vList, lcList):
@@ -130,12 +145,12 @@ def getInput(inFile):
 start = time.time() # get starting time
 inFile = 'input.txt' # name of file with input data
 vList, lcList = getInput(inFile) # get list of vertices
-# mx, my = maxLine(vList, lcList) # get max line
-# exportPlot(vList, mx, my) # draw plot and save
+mx, my = maxLine(vList, lcList) # get max line
+exportPlot(vList, mx, my) # draw plot and save
 
 
-max, v1, v2 = getDistance(vList, lcList, [0, 0], [25, 20])
-print "max: " + str(max)
-exportPlot(vList, [v1[0], v2[0]], [v1[1], v2[1]])
+# max, v1, v2 = getDistance(vList, lcList, [0, 0], [25, 20])
+# print "max: " + str(max)
+# exportPlot(vList, [v1[0], v2[0]], [v1[1], v2[1]])
 
 # print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
