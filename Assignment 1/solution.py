@@ -69,7 +69,7 @@ def checkIntersection(vList, lcList, v1, v2):
         if [poi_x, poi_y] == [float(lv1[0]), float(lv1[1])] or [poi_x, poi_y] == [float(lv2[0]), float(lv2[1])]: # intersection at endpoint
         	continue
         v1, v2 = replacePoint(v1, v2, poi_x, poi_y)
-        break
+
 
     return v1, v2
 
@@ -100,7 +100,7 @@ def maxLine(vList, lcList):
         for j, v2 in enumerate(vList):
             if j == i: # dont check the same point
                 continue
-            tmax = getDistance(vList, lcList, v1, v2)
+            tmax, v1, v2 = getDistance(vList, lcList, v1, v2)
             if tmax > max:
                 mx[0] = v1[0]
                 mx[1] = v2[0]
@@ -149,8 +149,9 @@ mx, my = maxLine(vList, lcList) # get max line
 exportPlot(vList, mx, my) # draw plot and save
 
 
+## TEST CASE ##
 # max, v1, v2 = getDistance(vList, lcList, [0, 0], [25, 20])
 # print "max: " + str(max)
 # exportPlot(vList, [v1[0], v2[0]], [v1[1], v2[1]])
 
-# print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
+print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
