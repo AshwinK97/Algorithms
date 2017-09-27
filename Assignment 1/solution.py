@@ -93,9 +93,9 @@ def getInput(inFile):
     vList = []
     lcList = []
     with open(inFile) as f:
-        f.readline().strip()
+        f.readline().strip() # read the number of lines
         for v in f:
-            vList.append(v.strip().split(' '))
+            vList.append(v.strip().split(' ')) # read vertices
 
     for i, v1 in enumerate (vList):
         if (i==len(vList)-1):
@@ -111,6 +111,9 @@ def getInput(inFile):
 start = time.time() # get starting time
 inFile = 'input.txt' # name of file with input data
 vList, lcList = getInput(inFile) # get list of vertices
-mx, my = maxLine(vList, lcList) # get max line
+# mx, my = maxLine(vList, lcList) # get max line
+
+mx, my = maxLine()
 exportPlot(vList, mx, my) # draw plot and save
+
 print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
