@@ -16,23 +16,42 @@ def checkIntersection(vList, lcList, v1, v2):
             continue
 
         if m == 'infinite': # if given line is vertical
-
-            pass
+        	# m is 'infinite'
+        	# b is the x-intercept
+        	poi_y = l[0] * b + l[1]  # intersection y-val
+        	poi_x = b                # intersection x-val 
 
         if l[0] == 'infinite': # if line in list is vertical
-            pass
+        	# l[0] is 'infinite'
+        	# l[1] is x intercept
+        	print "correct case"
+        	poi_y = m * l[1] + b # intersection y-val
+        	poi_x = l[1]         # intersection x-val
+        	break
 
         else: # for normal lines, POI and check if it is within v1 and v2, if not, replace
-            y = (l[1] - b) / (m - l[0])
-            x = (y - b) / m
+            poi_y = (l[1] - b) / (m - l[0])
+            poi_x = (poi_y - b) / m
 
+    # replace v1 v2 for vertical line
+    	# check if v1 or v2 is top or bottom
+
+    # replace v1 v2 for normal line
+    if v1[0] > v2[0]:
+    	if poi_x > v1[0]:
+    		v1[0] = poi_x
+    		v1[1] = poi_y
+    else:
+    	if poi_x > v2[0]:
+    		v2[0] = poi_x
+    		v2[1] = poi_y
 
     return v1, v2
 
-# return the distance between 2 vertices rounded to 6 decimals
+# return the distance between 2 vertices rounded to 6 decimals and the two new vertices
 def getDistance(vList, lcList, v1, v2):
-    # v1, v2 = checkIntersection(vList, lcList, v1, v2)
-    return round(math.sqrt((float(v2[0])-float(v1[0]))**2 + (float(v2[1])-float(v1[1]))**2), 6)
+    v1, v2 = checkIntersection(vList, lcList, v1, v2)
+    return round(math.sqrt((float(v2[0])-float(v1[0]))**2 + (float(v2[1])-float(v1[1]))**2), 6), v1, v2
 
 # return slope and y-intercept for given 2 vertices
 # if given vertices create a vertical line, return 'infinite' as slope and x-intercept as b
@@ -112,8 +131,11 @@ start = time.time() # get starting time
 inFile = 'input.txt' # name of file with input data
 vList, lcList = getInput(inFile) # get list of vertices
 # mx, my = maxLine(vList, lcList) # get max line
+# exportPlot(vList, mx, my) # draw plot and save
 
-mx, my = maxLine()
-exportPlot(vList, mx, my) # draw plot and save
 
-print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
+max, v1, v2 = getDistance(vList, lcList, [0, 0], [25, 20])
+print "max: " + str(max)
+exportPlot(vList, [v1[0], v2[0]], [v1[1], v2[1]])
+
+# print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
