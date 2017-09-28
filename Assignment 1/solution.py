@@ -4,30 +4,41 @@ import matplotlib.pyplot as plt
 import math
 import time
 
-def replacePoint(v1, v2, poi_x, poi_y):
-	# replace v1 v2 for vertical line
-    	# check if v1 or v2 is top or bottom
-
+def replacePoint(vList, v1, v2, poi_x, poi_y):
     # replace v1 v2 for normal line
     if v1[0] > v2[0]:
     	if poi_x > v1[0]:
     		v1[0] = poi_x
     		v1[1] = poi_y
+    	elif poi_x < v2[0]:
+    		v2[0] = poi_x
+    		v2[1] = poi_y
     	else:
-    		return [0, 0], [0, 0]
+    		return [0, 0], [0, 0], 0
     else:
     	if poi_x > v2[0]:
     		v2[0] = poi_x
     		v2[1] = poi_y
+    	elif poi_x < v1[0]:
+    		v1[0] = poi_x
+    		v1[1] = poi_y
     	else:
-    		return [0, 0], [0, 0]
+    		return [0, 0], [0, 0], 0
 
-    return v1, v2
+    # print v1, v2
+    return v1, v2, 1
 
 # check where line intersects with polygon and return new bounds
 def checkIntersection(vList, lcList, v1, v2):
+
     m, b = getLinear(v1, v2)
+    count = 0
+
     for i, l in enumerate(lcList):
+
+    	if count >= 1:
+        	break
+
     	# get the other line's vertices
     	lv1 = vList[i]
     	if (i==len(vList)-1):
@@ -35,11 +46,12 @@ def checkIntersection(vList, lcList, v1, v2):
         else:
             lv2 = vList[i+1]
 
-        if m == l[0]: # exception for parallel lines
+        ################# Parallel Lines ####################
+        if m == l[0]:
             continue
 
         ################# Vertical Lines ####################
-        if m == 'infinite': # if given line is vertical
+        elif m == 'infinite': # if given line is vertical
         	# m is 'infinite'
         	# b is the x-intercept
         	poi_y = l[0] * b + l[1]  # intersection y-val
@@ -59,17 +71,20 @@ def checkIntersection(vList, lcList, v1, v2):
         elif l[0] == 0:
         	poi_x = (l[1] - b) / m
         	poi_y = m * poi_x + b
-        	
+
         ################# 2 Diagonal Lines ##################
         else:
-            poi_y = (l[1] - b) / (m - l[0])
-            poi_x = (poi_y - b) / m
+            poi_x = (l[1] - b) / (l[0] - b)
+            poi_y = m * poi_x + b
 
-        # check whether we have to replace a point or not    
+        # check if intersection occured at an end point
         if [poi_x, poi_y] == [float(lv1[0]), float(lv1[1])] or [poi_x, poi_y] == [float(lv2[0]), float(lv2[1])]: # intersection at endpoint
         	continue
-        v1, v2 = replacePoint(v1, v2, poi_x, poi_y)
 
+        # check if point of intersection is within v1, v2 and lv1, lv2
+        if poi_x <= v1[0] and poi_x :
+            v1, v2, c = replacePoint(vList, v1, v2, poi_x, poi_y)
+        count += c
 
     return v1, v2
 
@@ -100,12 +115,12 @@ def maxLine(vList, lcList):
         for j, v2 in enumerate(vList):
             if j == i: # dont check the same point
                 continue
-            tmax, v1, v2 = getDistance(vList, lcList, v1, v2)
+            tmax, tv1, tv2 = getDistance(vList, lcList, v1, v2)
             if tmax > max:
-                mx[0] = v1[0]
-                mx[1] = v2[0]
-                my[0] = v1[1]
-                my[1] = v2[1]
+                mx[0] = tv1[0]
+                mx[1] = tv2[0]
+                my[0] = tv1[1]
+                my[1] = tv2[1]
                 max = tmax
 
     print "x1="+str(mx[0])  + ", " + "x2="+str(mx[1])
@@ -113,9 +128,7 @@ def maxLine(vList, lcList):
     print "max landing strip = " + str(max)
     return mx, my
 
-
-
-# save output as a jpeg
+# save output as a png
 def exportPlot(vList, mx, my):
     plt.fill(*zip(*vList), fill=False, color='green', lw='2')
     plt.plot(mx, my, color='r', lw='2') # plot([x1, x2], [y1, y2])
@@ -131,7 +144,7 @@ def getInput(inFile):
         for v in f:
             vList.append(v.strip().split(' ')) # read vertices
 
-    for i, v1 in enumerate (vList):
+    for i, v1 in enumerate (vList): # get m and b value for each line
         if (i==len(vList)-1):
             v2 = vList[0]
         else:
@@ -147,11 +160,4 @@ inFile = 'input.txt' # name of file with input data
 vList, lcList = getInput(inFile) # get list of vertices
 mx, my = maxLine(vList, lcList) # get max line
 exportPlot(vList, mx, my) # draw plot and save
-
-
-## TEST CASE ##
-# max, v1, v2 = getDistance(vList, lcList, [0, 0], [25, 20])
-# print "max: " + str(max)
-# exportPlot(vList, [v1[0], v2[0]], [v1[1], v2[1]])
-
 print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
