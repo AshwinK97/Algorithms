@@ -43,14 +43,29 @@ def extendLine(vList, v1, v2):
         if poi_x == "parallel":
             continue
 
+        # check if intersection was on endpoint
         # check if intersection is within bounds v1, v2
         if (poi_x <= v1[0] and poi_x >= v2[0]) or (poi_x <= v2[0] and poi_x >= v1[0]):
-            # if intersection is on an endpoint, either v3 or v4
-            if [poi_x, poi_y] == v3 or [poi_x, poi_y] == v4:
-                continue
+            # if intersection is on the endpoint v3
+            if [poi_x, poi_y] == v3:
+                # intersects between line v1, v2
+                if (v3[0] > v1[0] and v3[0] < v2[0]) or (v3[0] < v1[0] and v3[0] > v2[0]):
+                    v1, v2 = [0, 0], [0, 0]
+                    break
+                else:
+                    continue
+            # if intersection is on the endpoint v4
+            if [poi_x, poi_y] == v4:
+                # intersects between line v1, v2
+                if (v4[0] > v1[0] and v4[0] < v2[0]) or (v4[0] < v1[0] and v4[0] > v2[0]):
+                    v1, v2 = [0, 0], [0, 0]
+                    break
+                else:
+                    continue
             # if intersection is not on an endpoint, break
             else:
-                return [0, 0], [0, 0]
+                v1, v2 = [0, 0], [0, 0]
+                break
 
         # if intersection was outside of v1, v2 but inside of v3, v4
         elif (poi_x <= v3[0] and poi_x >= v4[0]) or (poi_x <= v4[0] and poi_x >= v3[0]):
@@ -84,6 +99,8 @@ def extendLine(vList, v1, v2):
                 t1, t2 = extendLine(vList, v1, v2)
                 if t1 == [0, 0] and t2 == [0, 0]:
                     break
+                v1, v2 = t1, t2
+
 
         # ignore intersection if it occurs outside of the polygon
         else:
@@ -136,7 +153,7 @@ def getInput(inFile):
     return vList
 
 ##################### MAIN #####################
-vList = getInput('input4.txt') # get list of vertices
+vList = getInput('input3.txt') # get list of vertices
 start = time.time() # get starting time
 mx, my = maxLine(vList) # max line aglorithm
 print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
