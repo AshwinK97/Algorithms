@@ -35,7 +35,7 @@ def replacePoint(v1, v2, poi_x, poi_y):
     		v2[0] = poi_x
     		v2[1] = poi_y
     	else:
-    		return [0, 0], [0, 0], 0
+    		return [0, 0], [0, 0]
     else:
     	if poi_x > v2[0]:
     		v2[0] = poi_x
@@ -44,9 +44,9 @@ def replacePoint(v1, v2, poi_x, poi_y):
     		v1[0] = poi_x
     		v1[1] = poi_y
     	else:
-    		return [0, 0], [0, 0], 0
+    		return [0, 0], [0, 0]
 
-    return v1, v2, 1
+    return v1, v2
 
 # check where line intersects with polygon and extend it
 def extendLine(vList, v1, v2):
@@ -68,16 +68,48 @@ def extendLine(vList, v1, v2):
 
         # check if intersection is within bounds v1, v2
         if (poi_x <= v1[0] and poi_x >= v2[0]) or (poi_x <= v2[0] and poi_x >= v1[0]):
+            # if intersection is on an endpoint, either v3 or v4
             if [poi_x, poi_y] == v3 or [poi_x, poi_y] == v4:
                 continue
+            # if intersection is not on an endpoint, break
             else:
-                break
+                return [0, 0], [0, 0]
+        # if intersection was outside of v1, v2 but inside of v3, v4
+        elif (poi_x <= v3[0] and poi_x >= v4[0]) or (poi_x <= v4[0] and poi_x >= v3[0]):
+            # v1 is right, v2 is left
+            if (v1[0] > v2[0]):
+                if poi_x > v1[0]:
+                    v1 = [poi_x, poi_y]
+                else:
+                    v2 = [poi_x, poi_y]
+            # v2 is right, v1 is left
+            elif (v1[0] < v2[0]):
+                if poi_x > v1[0]:
+                    v2 = [poi_x, poi_y]
+                else:
+                    v1 = [poi_x, poi_y]
+            # v1 is above, v2 is below
+            elif (v1[1] > v2[1]):
+                if poi_y > v1[1]:
+                    v1 = [poi_x, poi_y]
+                else:
+                    v2 = [poi_x, poi_y]
+            # v2 is above, v1 is below
+            elif (v1[1] < v2[1]):
+                if poi_y > v1[1]:
+                    v2 = [poi_x, poi_y]
+                else:
+                    v1 = [poi_x, poi_y]
+
+            # recursively call maxLine
+
+        # ignore intersection if it occurs outside of the polygon
+        else:
+            continue
 
         # if intersection was outside of v1, v2
             # use replace point to change either v1 or v2
                 #
-
-        # v1, v2, c = replacePoint(v1, v2, poi_x, poi_y)
     return v1, v2
 
 # return the maximum line
@@ -98,7 +130,7 @@ def maxLine(vList):
             tv1, tv2 = extendLine(vList, v1, v2)
 
             # get the distance between the two points
-            tmax = getDistance(v1, v2)
+            tmax = getDistance(tv1, tv2)
 
             # check if new line is longer than old max line
             if tmax > max:
