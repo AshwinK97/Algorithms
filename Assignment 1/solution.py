@@ -74,42 +74,43 @@ def extendLine(vList, v1, v2):
             # if intersection is not on an endpoint, break
             else:
                 return [0, 0], [0, 0]
-        # if intersection was outside of v1, v2 but inside of v3, v4
+        # if intersection was outside of v1, v2 but inside of v3, v4(poi_x <= v3[0] and poi_x >= v4[0]) or (poi_x <= v4[0] and poi_x >= v3[0])
         elif (poi_x <= v3[0] and poi_x >= v4[0]) or (poi_x <= v4[0] and poi_x >= v3[0]):
-            # v1 is right, v2 is left
-            if (v1[0] > v2[0]):
-                if poi_x > v1[0]:
-                    v1 = [poi_x, poi_y]
-                else:
-                    v2 = [poi_x, poi_y]
-            # v2 is right, v1 is left
-            elif (v1[0] < v2[0]):
-                if poi_x > v1[0]:
-                    v2 = [poi_x, poi_y]
-                else:
-                    v1 = [poi_x, poi_y]
-            # v1 is above, v2 is below
-            elif (v1[1] > v2[1]):
-                if poi_y > v1[1]:
-                    v1 = [poi_x, poi_y]
-                else:
-                    v2 = [poi_x, poi_y]
-            # v2 is above, v1 is below
-            elif (v1[1] < v2[1]):
-                if poi_y > v1[1]:
-                    v2 = [poi_x, poi_y]
-                else:
-                    v1 = [poi_x, poi_y]
+            if (poi_y <= v3[1] and poi_y >= v4[1]) or (poi_y <= v4[1] and poi_y >= v3[1]):
+                # v1 is right, v2 is left
+                if (v1[0] > v2[0]):
+                    if poi_x > v1[0]:
+                        v1 = [poi_x, poi_y]
+                    else:
+                        v2 = [poi_x, poi_y]
+                # v2 is right, v1 is left
+                elif (v1[0] < v2[0]):
+                    if poi_x > v1[0]:
+                        v2 = [poi_x, poi_y]
+                    else:
+                        v1 = [poi_x, poi_y]
+                # v1 is above, v2 is below
+                elif (v1[1] > v2[1]):
+                    if poi_y > v1[1]:
+                        v1 = [poi_x, poi_y]
+                    else:
+                        v2 = [poi_x, poi_y]
+                # v2 is above, v1 is below
+                elif (v1[1] < v2[1]):
+                    if poi_y > v1[1]:
+                        v2 = [poi_x, poi_y]
+                    else:
+                        v1 = [poi_x, poi_y]
 
-            # recursively call maxLine
+                # recursive call extendline
+                t1, t2 = extendLine(vList, v1, v2)
+                if t1 == [0, 0] and t2 == [0, 0]:
+                    break
 
         # ignore intersection if it occurs outside of the polygon
         else:
             continue
 
-        # if intersection was outside of v1, v2
-            # use replace point to change either v1 or v2
-                #
     return v1, v2
 
 # return the maximum line
