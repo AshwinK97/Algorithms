@@ -25,29 +25,6 @@ def getIntersection(line1, line2):
 def getDistance(v1, v2):
     return round(math.sqrt((float(v2[0])-float(v1[0]))**2 + (float(v2[1])-float(v1[1]))**2), 6)
 
-# replaces either v1 or v2 with (poi_x, poi_y) ############################# FIX THIS
-def replacePoint(v1, v2, poi_x, poi_y):
-    if v1[0] > v2[0]:
-    	if poi_x > v1[0]:
-    		v1[0] = poi_x
-    		v1[1] = poi_y
-    	elif poi_x < v2[0]:
-    		v2[0] = poi_x
-    		v2[1] = poi_y
-    	else:
-    		return [0, 0], [0, 0]
-    else:
-    	if poi_x > v2[0]:
-    		v2[0] = poi_x
-    		v2[1] = poi_y
-    	elif poi_x < v1[0]:
-    		v1[0] = poi_x
-    		v1[1] = poi_y
-    	else:
-    		return [0, 0], [0, 0]
-
-    return v1, v2
-
 # check where line intersects with polygon and extend it
 def extendLine(vList, v1, v2):
     iCount = 0 # number of intersections
@@ -74,7 +51,7 @@ def extendLine(vList, v1, v2):
             # if intersection is not on an endpoint, break
             else:
                 return [0, 0], [0, 0]
-            
+
         # if intersection was outside of v1, v2 but inside of v3, v4
         elif (poi_x <= v3[0] and poi_x >= v4[0]) or (poi_x <= v4[0] and poi_x >= v3[0]):
             if (poi_y <= v3[1] and poi_y >= v4[1]) or (poi_y <= v4[1] and poi_y >= v3[1]):
