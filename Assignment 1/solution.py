@@ -3,6 +3,7 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 import math
 import time
+import sys
 
 # returns the intersecction of two lines
 def getIntersection(line1, line2):
@@ -50,7 +51,6 @@ def extendLine(vList, v1, v2):
             if [poi_x, poi_y] == v3:
                 # intersects between line v1, v2
                 if (v3[0] > v1[0] and v3[0] < v2[0]) or (v3[0] < v1[0] and v3[0] > v2[0]):
-                    v1, v2 = [0, 0], [0, 0]
                     break
                 else:
                     continue
@@ -58,13 +58,11 @@ def extendLine(vList, v1, v2):
             if [poi_x, poi_y] == v4:
                 # intersects between line v1, v2
                 if (v4[0] > v1[0] and v4[0] < v2[0]) or (v4[0] < v1[0] and v4[0] > v2[0]):
-                    v1, v2 = [0, 0], [0, 0]
                     break
                 else:
                     continue
             # if intersection is not on an endpoint, break
             else:
-                v1, v2 = [0, 0], [0, 0]
                 break
 
         # if intersection was outside of v1, v2 but inside of v3, v4
@@ -100,7 +98,6 @@ def extendLine(vList, v1, v2):
                 if t1 == [0, 0] and t2 == [0, 0]:
                     break
                 v1, v2 = t1, t2
-
 
         # ignore intersection if it occurs outside of the polygon
         else:
@@ -138,10 +135,10 @@ def maxLine(vList):
     return mx, my
 
 # draw the polygon and line and save as image
-def exportPlot(vList, mx, my):
+def exportPlot(vList, mx, my, ofile):
     plt.fill(*zip(*vList), fill=False, color='green', lw='2')
     plt.plot(mx, my, color='r', lw='2') # plot([x1, x2], [y1, y2])
-    plt.savefig('output.png')
+    plt.savefig(ofile)
 
 # read the input file, return list of vertices
 def getInput(inFile):
@@ -153,8 +150,8 @@ def getInput(inFile):
     return vList
 
 ##################### MAIN #####################
-vList = getInput('input3.txt') # get list of vertices
+vList = getInput(sys.argv[1]) # get list of vertices
 start = time.time() # get starting time
 mx, my = maxLine(vList) # max line aglorithm
-print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
-exportPlot(vList, mx, my) # draw plot and save
+print "runtime for " + str(sys.argv[1]) + str(time.time() - start) + " seconds" # calculate and display runtime
+exportPlot(vList, mx, my, 'output.png') # draw plot and save
