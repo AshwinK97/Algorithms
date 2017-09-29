@@ -74,7 +74,8 @@ def extendLine(vList, v1, v2):
             # if intersection is not on an endpoint, break
             else:
                 return [0, 0], [0, 0]
-        # if intersection was outside of v1, v2 but inside of v3, v4(poi_x <= v3[0] and poi_x >= v4[0]) or (poi_x <= v4[0] and poi_x >= v3[0])
+            
+        # if intersection was outside of v1, v2 but inside of v3, v4
         elif (poi_x <= v3[0] and poi_x >= v4[0]) or (poi_x <= v4[0] and poi_x >= v3[0]):
             if (poi_y <= v3[1] and poi_y >= v4[1]) or (poi_y <= v4[1] and poi_y >= v3[1]):
                 # v1 is right, v2 is left
@@ -113,26 +114,21 @@ def extendLine(vList, v1, v2):
 
     return v1, v2
 
-# return the maximum line
+# return the x1, x2 and y1, y2 for the maximum line
 def maxLine(vList):
     mx = [0, 0] # x1, x2 for max line
     my = [0, 0] # y1, y2 for max line
     max = 0 # distance of max line
-
     # loop through all combinations of points
     for i, v1 in enumerate(vList):
         for j, v2 in enumerate(vList):
-
             # dont make line out of the same point
             if j == i:
                 continue
-
             # try to extend this line
             tv1, tv2 = extendLine(vList, v1, v2)
-
             # get the distance between the two points
             tmax = getDistance(tv1, tv2)
-
             # check if new line is longer than old max line
             if tmax > max:
                 mx[0] = tv1[0]
@@ -147,7 +143,7 @@ def maxLine(vList):
     print "max landing strip = " + str(max)
     return mx, my
 
-# save output as a png
+# draw the polygon and line and save as image
 def exportPlot(vList, mx, my):
     plt.fill(*zip(*vList), fill=False, color='green', lw='2')
     plt.plot(mx, my, color='r', lw='2') # plot([x1, x2], [y1, y2])
@@ -157,14 +153,14 @@ def exportPlot(vList, mx, my):
 def getInput(inFile):
     vList = []
     with open(inFile) as f:
-        f.readline().strip() # read the number of lines
+        f.readline().strip() # dump # of lines
         for v in f:
-            vList.append(map(float, v.split()))
+            vList.append(map(float, v.split())) # read as float arrays
     return vList
 
 ##################### MAIN #####################
-vList = getInput('input.txt') # get list of vertices
+vList = getInput('input4.txt') # get list of vertices
 start = time.time() # get starting time
-mx, my = maxLine(vList) # get max line
+mx, my = maxLine(vList) # max line aglorithm
 print "runtime " + str(time.time() - start) + " seconds" # calculate and display runtime
 exportPlot(vList, mx, my) # draw plot and save
