@@ -28,7 +28,6 @@ def getDistance(v1, v2):
 
 # check where line intersects with polygon and extend it
 def extendLine(vList, v1, v2):
-    iCount = 0 # number of intersections
     for i, v3 in enumerate(vList):
 
         # get v4 for the other line
@@ -63,6 +62,7 @@ def extendLine(vList, v1, v2):
                     continue
             # if intersection is not on an endpoint, break
             else:
+                # v1, v2 = [0, 0], [0, 0] # comment this out for test case 1
                 break
 
         # if intersection was outside of v1, v2 but inside of v3, v4
@@ -129,8 +129,8 @@ def maxLine(vList):
                 max = tmax
 
     # print the points and the length of max line
-    print "x1="+str(mx[0])  + ", " + "x2="+str(mx[1])
-    print "y1="+str(my[0]) + ", " + "y2="+str(my[1])
+    print "A(" + str(mx[0]) + ", " + str(my[0])+ ")"
+    print "B(" + str(mx[1]) + ", " + str(my[1])+ ")"
     print "max landing strip = " + str(max)
     return mx, my
 
@@ -153,5 +153,5 @@ def getInput(inFile):
 vList = getInput(sys.argv[1]) # get list of vertices
 start = time.time() # get starting time
 mx, my = maxLine(vList) # max line aglorithm
-print "runtime for " + str(sys.argv[1]) + str(time.time() - start) + " seconds" # calculate and display runtime
+print "runtime for '" + str(sys.argv[1]) + "': " + str(round(time.time() - start, 6)) + " seconds" # calculate and display runtime
 exportPlot(vList, mx, my, 'output.png') # draw plot and save

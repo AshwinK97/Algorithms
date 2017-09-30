@@ -1,4 +1,4 @@
-To run a test case:
+# To run a test cases
 
 python solution.py [arg1]
 

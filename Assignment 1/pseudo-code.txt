@@ -1,0 +1,47 @@
+# Algorithm Pseudo code
+
+vertices = readfile()                                                 # n
+
+maxLine(vertices) function:
+    x1, y1 = [0, 0]
+    x2, y2 = [0, 0]
+    max = 0
+    for i in list of vertices                                         # n
+        for j in list of vertices                                     # n-1
+            if i = j, skip this iteration
+            i, j = extendLine(vertices, i, j)                         # O(n^2)
+            tmax = getDistance(i, j)
+            if tmax > maxDistance
+                x1, y1 = i
+                x2, y2 = j
+                max = tmax
+
+    print x1, y1
+    print x2, y2
+    print max
+    return [x1, y1], [x2, y2]
+
+extendLine(vertices, i, j) function:
+    for a in list of vertices                                         # n
+        if a is last element
+            b = first
+        else
+            b = a + 1
+
+        poix, poiy = getIntersection([i, j], [a, b])
+
+        if lines are parallel, skip iteration
+
+        if intersection within i and j
+            if intersection is endpoint a or b
+                continue
+            else
+                break
+
+        else if intersection outside of i, j but inside a, b
+            replace i and j with poix and poiy
+            recursively call extendLine(vertices, v1, v2)            # n-1
+
+        else, skip if intersection occurs outside bounds of polygon
+
+    return i, j
