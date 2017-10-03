@@ -62,7 +62,7 @@ def extendLine(vList, v1, v2):
                     continue
             # if intersection is not on an endpoint, break
             else:
-                # v1, v2 = [0, 0], [0, 0] # comment this out for test case 1
+                v1, v2 = [0, 0], [0, 0] # comment this out for test case 1
                 break
 
         # if intersection was outside of v1, v2 but inside of v3, v4
