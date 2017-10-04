@@ -15,6 +15,7 @@ def paretoDominant(u, v):
             strict = 1
     return strict == 1
 
+# draw vector u and v with matplotlib and save as image
 def exportPlot(u, v, ofile):
     plt.plot(u, color='r', lw='2')
     plt.plot(v, color='b', lw='2')
