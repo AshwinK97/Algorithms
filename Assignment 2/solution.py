@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
@@ -16,13 +17,14 @@ def paretoDominant(u, v):
     return strict == 1
 
 # draw vector u and v with matplotlib and save as image
-def exportPlot(u, v, ofile):
-    plt.plot(u, color='r', lw='2')
-    plt.plot(v, color='b', lw='2')
+def exportPlot(u, v, p, ofile):
+    plt.scatter(u, v, color='blue', lw='1')
+    plt.plot(p, color='red', lw='1')
     plt.savefig(ofile)
 
 ######################## MAIN ###########################
-u = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-v = [1, 2, 3, 4, 5, 6, 7, 9, 9, 10]
-exportPlot(u, v, 'output.png')
+u = np.array([1, 2, 3, 4, 5]) # set u (x-axis)
+v = np.array([2, 4, 6, 8, 10]) # set v (y-axis)
+p = np.array([]) # set of non dominated points
+exportPlot(u, v, p, 'output.png')
 print paretoDominant(u, v)
