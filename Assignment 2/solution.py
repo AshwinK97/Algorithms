@@ -10,34 +10,37 @@ def paretoDominant(u, v, mode):
         points = sorted(zip(u, v), key=lambda k: [k[1], k[0]])
         front = points[0] # starting point will be the left most
         pareto = [front] # store the pareto front set
-        # if x is higher, add to front
+        # if x is greater than or equal, add to front
         for p in points:
             if p[0] >= front[0]:
                 front = p
                 pareto.append(front)
     elif mode == 1: # low u and high v
-        # sort points by x, y, ascending
+        # sort points by y, x, ascending
         points = sorted(zip(u, v), key=lambda k: [k[1], k[0]])
         front = points[0] # starting point will be the left most
         pareto = [front] # store the pareto front set
+        # if x is less than or equal, add to front
         for p in points:
             if p[0] <= front[0]:
                 front = p
                 pareto.append(front)
     elif mode == 2: # high u and low v
-        # sort points by y, x, descending
-        points = sorted(zip(u, v), key=lambda k: [k[1], k[0]], reverse=True)
+        # sort points by x, y, ascending
+        points = sorted(zip(u, v), key=lambda k: [k[0], k[1]])
         front = points[0] # starting point will be the left most
         pareto = [front] # store the pareto front set
+        # if y is greater than or equal to, add to front
         for p in points:
-            if p[0] <= front[0]:
+            if p[1] >= front[1]:
                 front = p
                 pareto.append(front)
     elif mode == 3: # high u and high v
-        # sort points by x, y, desc
+        # sort points by x, y, descending
         points = sorted(zip(u, v), key=lambda k: [k[0], k[1]], reverse=True)
         front = points[0] # starting point will be the left most
         pareto = [front] # store the pareto front set
+        # if y is greater than or equal to, add to front
         for p in points:
             if p[1] >= front[1]:
                 front = p
