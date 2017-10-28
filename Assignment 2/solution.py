@@ -57,26 +57,34 @@ def exportPlot(u, v, pu, pv, ofile):
     plt.savefig(ofile)                  # export plot
     plt.clf()                           # clear the figure
 
-######################## MAIN ###########################
+############################################# MAIN #############################################
 u, v = [random.sample(range(20), 20), random.sample(range(20), 20)] # random vectors
-print "points:\n", zip(u, v) # print list of points
+print "points:", zip(u, v) # print list of points
 
 # CASE 1 - low values for u and v are desirable
-pareto = paretofront(u, v, 1) # get pareto set for points with given mode
-print "low u low v:\n", pareto[1:] # print pareto set
+start = time.time()                      # get start time
+pareto = paretofront(u, v, 1)            # get pareto set for points with given mode
+end = str(round(time.time() - start, 6)) # get end time
+print "low u low v:", pareto[1:], end, "seconds" # print pareto set
 exportPlot(u, v, [i[0] for i in pareto], [i[1] for i in pareto], 'output1.png') # plot the points
 
 # CASE 2 - high values for u and v are desirable
-pareto = paretofront(u, v, 2) # get pareto set for points with given mode
-print "high u high v:\n", pareto[1:] # print pareto set
+start = time.time()                      # get start time
+pareto = paretofront(u, v, 2)            # get pareto set for points with given mode
+end = str(round(time.time() - start, 6)) # get end time
+print "high u high v:", pareto[1:], end, "seconds" # print pareto set
 exportPlot(u, v, [i[0] for i in pareto], [i[1] for i in pareto], 'output2.png') # plot the points
 
 # CASE 3 - low values for u and high values for v are desirable
-pareto = paretofront(u, v, 3) # get pareto set for points with given mode
-print "low u high v:\n", pareto[1:] # print pareto set
+start = time.time()                      # get start time
+pareto = paretofront(u, v, 3)            # get pareto set for points with given mode
+end = str(round(time.time() - start, 6)) # get end time
+print "low u high v:", pareto[1:], end, "seconds" # print pareto set
 exportPlot(u, v, [i[0] for i in pareto], [i[1] for i in pareto], 'output3.png') # plot the points
 
 # CASE 4 - high values for u and low values for v are desirable
-pareto = paretofront(u, v, 4) # get pareto set for points with given mode
-print "high u low v:\n", pareto[1:] # print pareto set
+start = time.time()                      # get start time
+pareto = paretofront(u, v, 4)            # get pareto set for points with given mode
+end = str(round(time.time() - start, 6)) # get end time
+print "high u low v:", pareto[1:], end, "seconds" # print pareto set
 exportPlot(u, v, [i[0] for i in pareto], [i[1] for i in pareto], 'output4.png') # plot the points
