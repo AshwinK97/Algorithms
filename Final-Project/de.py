@@ -12,6 +12,9 @@ discus = lambda x: (10**6)*(x[0]**2) + sum(np.power(x[1:], 2))
 rosenbrock = lambda x: sum(100 * np.power((np.power(x[:-1], 2) \
 	- x[1:]), 2) + np.power((x[:-1] - 1), 2))
 
+def ackley(x):
+	return -20 * np.exp(-0.2 * np.sqrt(sum(np.power(x, 2))/len(x))) - np.exp(sum(np.cos(2*np.pi*x))/len(x)) + 20 + np.exp(1)
+
 ackley = lambda x: -20 * np.exp(-0.2 * np.sqrt(sum(np.power(x, 2))/len(x))) - \
 	np.exp(sum(np.cos(2*np.pi*x))/len(x)) + 20 + np.exp(1)
 
@@ -30,6 +33,22 @@ katsuura = lambda x: (10/len(x)) * np.prod(np.power(([1+ i * \
 	np.round(np.power(2, j) * item)) / np.power(2, j), \
 	range(1, 33))) for i, item in enumerate(x)]), (10 \
 	/ np.power(len(x), 1.2)))) - (10 / np.power(len(x), 2))
+
+def plot3d(fun):
+	fig = plt.figure()
+	ax = fig.add_subplot(111, projection='3d')
+	x = np.linspace(-10, 10, 100)
+	y = np.linspace(-10, 10, 100)
+	X, Y = np.meshgrid(x, y)
+	Z = fun(np.asarray([X, Y]))
+
+	ax.plot_surface(X, Y, Z)
+
+	ax.set_xlabel('X axis')
+	ax.set_ylabel('Y axis')
+	ax.set_zlabel('Z axis')
+
+	plt.show()
 
 def de(fobj, bounds, mut=0.8, crossp=0.9, population=100, its=3000):
 	dimensions = len(bounds)
@@ -60,11 +79,13 @@ def de(fobj, bounds, mut=0.8, crossp=0.9, population=100, its=3000):
 		yield best, fitness[best_idx]
 
 
-for d in [2, 5, 10]:
-	output = list(de(ackley, bounds=[(-10, 10)] * d))
-	print(output[-1])
-	x, f = zip(*output)
-	plt.plot(f, label='d={}'.format(d))
-	plt.legend()
-	plt.show()
-	# plt.savefig('ackley.png')
+# for d in [2, 5, 10]:
+# 	output = list(de(ackley, bounds=[(-10, 10)] * d))
+# 	print(output[-1])
+# 	x, f = zip(*output)
+# 	plt.plot(f, label='d={}'.format(d))
+# 	plt.legend()
+# 	plt.show()
+# 	plt.savefig('ackley.png')
+
+plot3d(ackley)
