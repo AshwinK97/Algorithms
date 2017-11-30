@@ -22,15 +22,16 @@ weierstrass = lambda x: sum(sum(map(lambda k: np.power(0.5, k) * \
 	np.power(3, k) * 0.5) , range(1, 21))))
 
 griewank = lambda x: sum(np.power(x, 2)/4000) - \
-	np.prod([np.cos(a/ (i + 1)) + 1 for i, a in enumerate(x)])
+	np.prod([np.cos(a/np.sqrt(i + 1)) + 1 for i, a in enumerate(x)])
 
 rastrigrin = lambda x: sum(np.power(x, 2) - 10*np.cos(2*np.pi*x) + 10)
 
-katsuura = lambda x: (10/len(x)) * np.prod(np.power(([1+ i * \
+katsuura = lambda x: (10/np.power(len(x), 2)) * np.prod(1 + np.power(([1+ i * \
 	sum(map(lambda j: abs(np.power(2, j) * item - \
 	np.round(np.power(2, j) * item)) / np.power(2, j), \
 	range(1, 33))) for i, item in enumerate(x)]), (10 \
 	/ np.power(len(x), 1.2)))) - (10 / np.power(len(x), 2))
+
 
 # plot the specified function in 3 dimensions
 def plot3D(fun, fname):
@@ -138,15 +139,15 @@ def pso(fun, dimensions, min = -10, max = 10, its = 3000, populationSize = 100, 
 
 
 #-- get 3D surface plot of each function --*
-# plot3D(hce, './plots/High Conditioned Elliptic Function.png')
-# plot3D(bent_cigar, './plots/Bent Cigar Function.png')
-# plot3D(discus, './plots/Discus Function.png')
-# plot3D(rosenbrock, './plots/Rosenbrock\'s Function')
-# plot3D(ackley, './plots/Ackley\'s Function')
-# plot3D(weierstrass, './plots/Weierstrass Function')
-# plot3D(rastrigrin, './plots/Rastrigrin\'s Function')
-# plot3D(griewank, './plots/Griewank\'s Function')
-# plot3D(katsuura, './plots/Katsuura Function')
+plot3D(hce, './plots/High Conditioned Elliptic Function.png')
+plot3D(bent_cigar, './plots/Bent Cigar Function.png')
+plot3D(discus, './plots/Discus Function.png')
+plot3D(rosenbrock, './plots/Rosenbrock\'s Function')
+plot3D(ackley, './plots/Ackley\'s Function')
+plot3D(weierstrass, './plots/Weierstrass Function')
+plot3D(rastrigrin, './plots/Rastrigrin\'s Function')
+plot3D(griewank, './plots/Griewank\'s Function')
+plot3D(katsuura, './plots/Katsuura Function')
 
 # run DE and PSO on different benchmark functions, for required dimensions
 for d in [2, 5, 10]:
@@ -163,16 +164,11 @@ for d in [2, 5, 10]:
 	plt.show()
 
 
-
+## TESTING
 # for d in range (0, 51):
 
-# outputPSO = list(pso(hce, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=2))
-# plt.plot(outputPSO, label='red=PSO')
-# plt.legend()
+# print list(pso(hce, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=2))
 
 # print list(pso(ackley, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=2))
-
-# plt.plot(outputPSO)
-# plt.show()
 
 
