@@ -109,8 +109,8 @@ class Ackley(BaseFunction):
   def evaluate(self, x):
     d = len(x) 
     s1 = sum(np.power(x, 2))
-    s2 = sum(np.cos(self.c * x))
-    return -self.a * np.exp(-self.b * np.sqrt(s1/d)) - np.exp(s2/d) + self.a + np.exp(1)
+    s2 = sum(np.cos(2*np.pi*x))
+    return -20 * np.exp(-0.2 * np.sqrt(sum(np.power(x, 2))/len(x))) - np.exp(sum(np.cos(2*np.pi*x))/len(x)) + self.a + np.exp(1)
 
 class Rastrigin(BaseFunction):
   def __init__(self, dim=2, bounds=None, default_bounds=(-10, 10), a=10, b=2 * np.pi):
