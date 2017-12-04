@@ -26,11 +26,24 @@ griewank = lambda x: sum(np.power(x, 2)/4000) - \
 
 rastrigrin = lambda x: sum(np.power(x, 2) - 10*np.cos(2*np.pi*x) + 10)
 
-katsuura = lambda x: (10/np.power(len(x), 2)) * np.prod(1 + np.power(([1+ i * \
-	sum(map(lambda j: abs(np.power(2, j) * item - \
-	np.round(np.power(2, j) * item)) / np.power(2, j), \
-	range(1, 33))) for i, item in enumerate(x)]), (10 \
-	/ np.power(len(x), 1.2)))) - (10 / np.power(len(x), 2))
+# katsuura = lambda x: (10/np.power(len(x), 2)) * np.prod(1 + np.power(([1+ i * \
+# 	sum(map(lambda j: abs(np.power(2, j) * item - \
+# 	np.round(np.power(2, j) * item)) / np.power(2, j), \
+# 	range(1, 33))) for i, item in enumerate(x)]), (10 \
+# 	/ np.power(len(x), 1.2)))) - (10 / np.power(len(x), 2))
+
+def katsuura(x):
+	sum = 0.0
+	product = 1.0
+	for i in range(len(x)):
+		summation = 0
+		for j in range(1, 32):
+			term = 2 ** j * x[i]
+			summation += np.absolute(term - np.round(term)) / (2 ** j)
+		#product *= np.pow(1 + ((i + 1) * summation), 10 / np.pow(len(x), 1.2))
+		product *= (1 + ((i + 1) * summation) ** (10 / (len(x) ** 1.2)))
+	sum = (10.0 / len(x) * len(x)) * product - (10.0 / len(x) * len(x))
+	return sum
 
 
 # plot the specified function in 3 dimensions
@@ -150,18 +163,18 @@ plot3D(griewank, './plots/Griewank\'s Function')
 plot3D(katsuura, './plots/Katsuura Function')
 
 # run DE and PSO on different benchmark functions, for required dimensions
-for d in [2, 5, 10]:
-	# get stats for DE
-	outputDE = list(de(griewank, bounds=[(-10, 10)] * d))
-	x, f = zip(*outputDE)
-	plt.plot(f)
-	plt.show()
-	plt.clf()
+# for d in [2, 5, 10]:
+# 	# get stats for DE
+# 	outputDE = list(de(griewank, bounds=[(-10, 10)] * d))
+# 	x, f = zip(*outputDE)
+# 	plt.plot(f)
+# 	plt.show()
+# 	plt.clf()
 
-	# get stats for PSO
-	outputPSO = list(pso(griewank, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=d))
-	plt.plot(outputPSO)
-	plt.show()
+# 	# get stats for PSO
+# 	outputPSO = list(pso(griewank, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=d))
+# 	plt.plot(outputPSO)
+# 	plt.show()
 
 
 ## TESTING
