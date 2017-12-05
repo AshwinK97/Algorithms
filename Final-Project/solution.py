@@ -4,33 +4,34 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 
 # Function implementations
-hce = lambda x: sum([np.power(1000000.0, (i)/(len(x)-1)) * (xC ** 2) for i, xC in enumerate(x)])
+def hce(x):
+	return sum([np.power(1000000.0, (i)/(len(x)-1)) * (xC ** 2) for i, xC in enumerate(x)])
 
-bent_cigar = lambda x: x[0]**2 + (10**6)*sum(np.power(x[1:], 2))
+def bent_cigar(x):
+	return x[0]**2 + (10**6)*sum(np.power(x[1:], 2))
 
-discus = lambda x: (10**6)*(x[0]**2) + sum(np.power(x[1:], 2))
+def discus(x):
+	return (10**6)*(x[0]**2) + sum(np.power(x[1:], 2))
 
-rosenbrock = lambda x: sum(100 * np.power((np.power(x[:-1], 2) \
-	- x[1:]), 2) + np.power((x[:-1] - 1), 2))
+def rosenbrock(x):
+	return sum(100 * np.power((np.power(x[:-1], 2) - x[1:]), 2) + np.power((x[:-1] - 1), 2))
 
-ackley = lambda x: -20 * np.exp(-0.2 * np.sqrt(sum(np.power(x, 2))/len(x))) - \
+def ackley(x):
+	return -20 * np.exp(-0.2 * np.sqrt(sum(np.power(x, 2))/len(x))) - \
 	np.exp(sum(np.cos(2*np.pi*x))/len(x)) + 20 + np.exp(1)
 
-weierstrass = lambda x: sum(sum(map(lambda k: np.power(0.5, k) * \
+def weierstrass(x):
+	return sum(sum(map(lambda k: np.power(0.5, k) * \
 	np.cos(2*np.pi*np.power(3, k) * (np.array(x) + 0.5)) , range(1, 21)))) \
 	 - len(x) * (sum(map(lambda k: np.power(0.5, k) * np.cos(2*np.pi * \
 	np.power(3, k) * 0.5) , range(1, 21))))
 
-griewank = lambda x: sum(np.power(x, 2)/4000) - \
+def griewank(x):
+	return sum(np.power(x, 2)/4000) - \
 	np.prod([np.cos(a/np.sqrt(i + 1)) + 1 for i, a in enumerate(x)])
 
-rastrigrin = lambda x: sum(np.power(x, 2) - 10*np.cos(2*np.pi*x) + 10)
-
-# katsuura = lambda x: (10/np.power(len(x), 2)) * np.prod(1 + np.power(([1+ i * \
-# 	sum(map(lambda j: abs(np.power(2, j) * item - \
-# 	np.round(np.power(2, j) * item)) / np.power(2, j), \
-# 	range(1, 33))) for i, item in enumerate(x)]), (10 \
-# 	/ np.power(len(x), 1.2)))) - (10 / np.power(len(x), 2))
+def rastrigrin(x):
+	return sum(np.power(x, 2) - 10*np.cos(2*np.pi*x) + 10)
 
 def katsuura(x):
 	sum = 0.0
@@ -40,7 +41,6 @@ def katsuura(x):
 		for j in range(1, 32):
 			term = 2 ** j * x[i]
 			summation += np.absolute(term - np.round(term)) / (2 ** j)
-		#product *= np.pow(1 + ((i + 1) * summation), 10 / np.pow(len(x), 1.2))
 		product *= (1 + ((i + 1) * summation) ** (10 / (len(x) ** 1.2)))
 	sum = (10.0 / len(x) * len(x)) * product - (10.0 / len(x) * len(x))
 	return sum
@@ -151,37 +151,54 @@ def pso(fun, dimensions, min = -10, max = 10, its = 3000, populationSize = 100, 
 		yield gbest['cost'];
 
 
-#-- get 3D surface plot of each function --*
-plot3D(hce, './plots/High Conditioned Elliptic Function.png')
-plot3D(bent_cigar, './plots/Bent Cigar Function.png')
-plot3D(discus, './plots/Discus Function.png')
-plot3D(rosenbrock, './plots/Rosenbrock\'s Function')
-plot3D(ackley, './plots/Ackley\'s Function')
-plot3D(weierstrass, './plots/Weierstrass Function')
-plot3D(rastrigrin, './plots/Rastrigrin\'s Function')
-plot3D(griewank, './plots/Griewank\'s Function')
-plot3D(katsuura, './plots/Katsuura Function')
+# get 3D surface plot of each function
+# plot3D(hce, './plots/High Conditioned Elliptic Function.png')
+# plot3D(bent_cigar, './plots/Bent Cigar Function.png')
+# plot3D(discus, './plots/Discus Function.png')
+# plot3D(rosenbrock, './plots/Rosenbrock\'s Function.png')
+# plot3D(ackley, './plots/Ackley\'s Function.png')
+# plot3D(weierstrass, './plots/Weierstrass Function.png')
+# plot3D(rastrigrin, './plots/Rastrigrin\'s Function.png')
+# plot3D(griewank, './plots/Griewank\'s Function.png')
+# plot3D(katsuura, './plots/Katsuura Function.png')
 
+## get optimization plots
 # run DE and PSO on different benchmark functions, for required dimensions
 # for d in [2, 5, 10]:
 # 	# get stats for DE
-# 	outputDE = list(de(griewank, bounds=[(-10, 10)] * d))
+# 	outputDE = list(de(katsuura, bounds=[(-10, 10)] * d))
 # 	x, f = zip(*outputDE)
 # 	plt.plot(f)
 # 	plt.show()
 # 	plt.clf()
 
 # 	# get stats for PSO
-# 	outputPSO = list(pso(griewank, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=d))
+# 	outputPSO = list(pso(katsuura, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=d))
 # 	plt.plot(outputPSO)
 # 	plt.show()
 
+## run test cases
+functions = [hce, bent_cigar, discus, rosenbrock, ackley, weierstrass, rastrigrin, griewank, katsuura]
+dimensions = [2, 5, 10]
 
-## TESTING
-# for d in range (0, 51):
+for f in functions:
+	print "-----",str(f.__name__),"-----"
+	print "---DE---"
+	for d in dimensions:
+		out = list(de(f, its=3000, bounds=[(-10, 10)] * d))
+		worst = out[0][1]
+		mid = out[20][1]
+		best = out[-1][1]
+		print "d =", d
+		print "worst:", worst, "best:", best, "average:", (worst+mid+best)/3
+		print "Standard Deviation", np.std([worst, mid, best])
 
-# print list(pso(hce, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=2))
-
-# print list(pso(ackley, its = 200, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=2))
-
-
+	print "---PSO---"
+	for d in dimensions:
+		out = list(pso(f, its = 3000, populationSize = 100, c1 = 2.05, c2 = 2.05, w = 0.65, wdamp = 0.995, dimensions=d))
+		worst = out[0]
+		mid = out[20]
+		best = out[-1]
+		print "d =", d
+		print "worst:", worst, "best:", best, "average:", (worst+mid+best)/3
+		print "Standard Deviation", np.std([worst, mid, best])
